@@ -33,4 +33,12 @@ describe 'jenkins::job::present' do
     it { should_not contain_exec('jenkins delete-job myjob') }
   end
 
+  describe 'with replace not a boolean value' do
+    quotes = "<xml version='1.0' encoding='UTF-8'></xml>"
+    let(:params) {{ :config => quotes, :config_file => quotes, :replace => 'uncool', }}
+    it 'should fail' do
+      should raise_error(Puppet::Error, /Unknown type of boolean given/)
+    end
+  end
+
 end
