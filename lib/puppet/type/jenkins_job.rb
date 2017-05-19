@@ -29,6 +29,9 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
       elsif newvalue == :absent
         return 'removed'
       else
+        if @resource[:replace] == false
+          return 'left unchanged'
+        end
         if Puppet[:show_diff] and resource[:show_diff]
           # XXX this really should be turned into a helper method and submitted
           # to # core puppet
@@ -61,6 +64,11 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_job) do
 
   newproperty(:enable, :boolean => true, :parent => Puppet::Property::Boolean) do
     desc 'enable/disable job'
+    defaultto true
+  end
+
+  newproperty(:replace, :boolean => true, :parent => Puppet::Property::Boolean) do
+    desc 'replace existing job'
     defaultto true
   end
 
