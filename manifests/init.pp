@@ -475,6 +475,7 @@ class jenkins(
   }
   include $jenkins_package_class
 
+  include ::jenkins::user_setup
   include ::jenkins::config
   include ::jenkins::plugins
   include ::jenkins::jobs
@@ -525,6 +526,7 @@ class jenkins(
 
   if $manage_service {
     Anchor['jenkins::begin']
+    -> Class['jenkins::user_setup']
       -> Class[$jenkins_package_class]
         -> Class['jenkins::config']
           -> Class['jenkins::plugins']
