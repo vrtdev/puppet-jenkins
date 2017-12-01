@@ -114,12 +114,22 @@ describe Puppet::Type.type(:jenkins_job).provider(:cli) do
       provider.flush
     end
 
-    it 'should call update_job' do
+    it 'should call update_job when replacing' do
       provider = described_class.new
       provider.ensure = :present
 
       expect(provider).to receive(:exists?) { true }
       expect(provider).to receive(:update_job)
+      provider.flush
+    end
+
+    it 'should not call update_job when not replacing' do
+      provider = described_class.new
+      provider.ensure = :present
+      provider.replace = false
+
+      expect(provider).to receive(:exists?) { true }
+      expect(provider).not_to receive(:update_job)
       provider.flush
     end
 

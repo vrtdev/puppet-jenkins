@@ -44,7 +44,9 @@ Puppet::Type.type(:jenkins_job).provide(:cli, :parent => Puppet::X::Jenkins::Pro
     case self.ensure
     when :present
       if update
-        update_job
+        if self.replace
+          update_job
+        end
       else
         create_job
       end
