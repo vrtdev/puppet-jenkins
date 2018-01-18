@@ -15,6 +15,7 @@ import hudson.security.HudsonPrivateSecurityRealm.Details
 // Code
 def instance = Jenkins.getInstance()
 def currentRealm = instance.getSecurityRealm().getClass().getName()
+def previousRealm = null
 
 // bootstrap users
 def bootstrapUsers = [
@@ -33,15 +34,13 @@ def bootstrapUsers = [
 <% end -%>
 ]
 
-if (currentRealm == 'hudson.security.HudsonPrivateSecurityRealm') {
-  println "--> Jenkins Local Security Realm already configured (HudsonPrivateSecurityRealm)"
-} else {
-  println "--> Configuring Jenkins Local Security Realm (HudsonPrivateSecurityRealm)"
+
+if (currentRealm != 'hudson.security.HudsonPrivateSecurityRealm') {
+  println "--> Overriding security while creating bootstrap users"
+  previousRealm = instance.getSecurityRealm()
   def hudsonRealm = new HudsonPrivateSecurityRealm(false)
   instance.setSecurityRealm(hudsonRealm)
-  println "--> Done configuring Jenkins Local Security Realm"
 }
-
 
 bootstrapUsers.each { user ->
 
@@ -95,7 +94,10 @@ bootstrapUsers.each { user ->
 
 }
 
-
+if (previousRealm != null) {
+  println "--> Resetting previous realm after bootstrapping the user"
+  instance.setSecurityRealm(previousRealm)
+}
 
 println "--> Saving Config"
 instance.save()
