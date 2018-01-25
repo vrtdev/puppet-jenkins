@@ -18,7 +18,6 @@ Puppet::X::Jenkins::Type::Cli.newtype(:jenkins_credentials) do
   newproperty(:domain) do
     desc 'credentials domain within jenkins - :undef indicates the "global" domain'
     defaultto :undef
-    newvalues(:undef)
   end
 
   newproperty(:scope) do
