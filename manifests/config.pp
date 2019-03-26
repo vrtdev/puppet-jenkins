@@ -107,5 +107,4 @@ class jenkins::config {
     ensure_resource('file', $::jenkins::plugin_dir, $plugin_dir_params)
     ensure_resource('file', $::jenkins::job_dir, $dir_params)
   }
->>>>>>> vrtdev/feature/rebased_pr_761+ssh_pubkey_support
 }
