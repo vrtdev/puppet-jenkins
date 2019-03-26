@@ -1,19 +1,19 @@
 require 'spec_helper'
 
-describe 'jenkins', :type => :module do
-  let (:facts) do
+describe 'jenkins', type: :class do
+  let(:facts) do
     {
-      :osfamily                  => 'RedHat',
-      :operatingsystem           => 'RedHat',
-      :operatingsystemrelease    => '6.7',
-      :operatingsystemmajrelease => '6',
+      osfamily: 'RedHat',
+      operatingsystem: 'RedHat',
+      operatingsystemrelease: '6.7',
+      operatingsystemmajrelease: '6'
     }
   end
 
   context 'user_setup' do
     context 'default' do
-      it { should contain_user('jenkins') }
-      it { should contain_group('jenkins') }
+      it { is_expected.to contain_user('jenkins') }
+      it { is_expected.to contain_group('jenkins') }
 
       [
         '/var/lib/jenkins',
@@ -21,38 +21,42 @@ describe 'jenkins', :type => :module do
         '/var/lib/jenkins/jobs'
       ].each do |datadir|
         it do
-          should contain_file(datadir).with(
-            :ensure => 'directory',
-            :mode   => '0755',
-            :group  => 'jenkins',
-            :owner  => 'jenkins',
+          is_expected.to contain_file(datadir).with(
+            ensure: 'directory',
+            mode: '0755',
+            group: 'jenkins',
+            owner: 'jenkins'
           )
         end
       end
     end
     context 'unmanaged' do
-      let (:params) {{
-        :manage_user     => false,
-        :manage_group    => false,
-        :manage_datadirs => false,
-      }}
-      it { should_not contain_user('jenkins') }
-      it { should_not contain_group('jenkins') }
-      it { should_not contain_file('/var/lib/jenkins') }
-      it { should_not contain_file('/var/lib/jenkins/jobs') }
-      it { should_not contain_file('/var/lib/jenkins/plugins') }
+      let(:params) do
+        {
+          manage_user: false,
+          manage_group: false,
+          manage_datadirs: false
+        }
+      end
+
+      it { is_expected.not_to contain_user('jenkins') }
+      it { is_expected.not_to contain_group('jenkins') }
+      it { is_expected.not_to contain_file('/var/lib/jenkins') }
+      it { is_expected.not_to contain_file('/var/lib/jenkins/jobs') }
+      it { is_expected.not_to contain_file('/var/lib/jenkins/plugins') }
     end
 
     context 'custom home' do
-      let (:params) {{
-        :localstatedir => '/custom/jenkins',
-      }}
-      it { should contain_user('jenkins').with_home('/custom/jenkins') }
-      it { should contain_file('/custom/jenkins') }
-      it { should contain_file('/custom/jenkins/plugins') }
-      it { should contain_file('/custom/jenkins/jobs') }
+      let(:params) do
+        {
+          localstatedir: '/custom/jenkins'
+        }
+      end
+
+      it { is_expected.to contain_user('jenkins').with_home('/custom/jenkins') }
+      it { is_expected.to contain_file('/custom/jenkins') }
+      it { is_expected.to contain_file('/custom/jenkins/plugins') }
+      it { is_expected.to contain_file('/custom/jenkins/jobs') }
     end
-
   end
-
 end

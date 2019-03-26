@@ -38,7 +38,7 @@ class jenkins::user_setup {
       'purge'   => true,
       'recurse' => true,
       'force'   => true,
-      'notify'  => Service['::jenkins::service'],
+      'notify'  => Service['jenkins'],
     }),
     default => $dir_params,
   }
