@@ -25,7 +25,7 @@ define jenkins::user (
   Boolean $bootstrapping            = false,
 ){
 
-  include ::jenkins::cli_helper
+  include jenkins::cli_helper
 
   Class['jenkins::cli_helper']
     -> Jenkins::User[$title]

@@ -7,7 +7,7 @@ class jenkins::cli {
     fail("Use of private class ${name} by ${caller_module_name}")
   }
 
-  include ::jenkins
+  include jenkins
 
   # XXX Classes/defines which include the jenkins::cli class assume that they
   # can use the cli even if $::jenkins::cli == false.  This breaks the top
@@ -40,7 +40,6 @@ class jenkins::cli {
     path        => ['/bin', '/usr/bin'],
     cwd         => '/tmp',
     refreshonly => true,
-    require     => Class['::jenkins::service'],
   }
   # Extract latest CLI in case package is updated / downgraded
   Package[$::jenkins::package_name] ~> Exec['jenkins-cli']
@@ -77,5 +76,5 @@ class jenkins::cli {
 
   # jenkins::cli::reload should be included only after $::jenkins::cli::cmd is
   # defined
-  include ::jenkins::cli::reload
+  include jenkins::cli::reload
 }

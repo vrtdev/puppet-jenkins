@@ -16,8 +16,8 @@ define jenkins::job::present(
   Boolean $replace              = true,
 ){
 
-  include ::jenkins::cli
-  include ::jenkins::cli::reload
+  include jenkins::cli
+  include jenkins::cli::reload
 
   if $config_file and $config {
     fail('You cannot set both $config_file AND $config param, only one is required')
@@ -58,6 +58,7 @@ define jenkins::job::present(
     file { $tmp_config_path:
       content => $d,
       require => Exec['jenkins-cli'],
+      before  => Exec["jenkins create-job ${jobname}"],
     }
   }
 
@@ -81,7 +82,6 @@ define jenkins::job::present(
   exec { "jenkins create-job ${jobname}":
     command => "${cat_config} | ${create_job}",
     creates => [$config_path, "${job_dir}/builds"],
-    require => File[$tmp_config_path],
   }
 
   if $replace {
@@ -91,7 +91,6 @@ define jenkins::job::present(
       command => "${cat_config} | ${update_job}",
       onlyif  => "test -e ${config_path}",
       unless  => "${difftool} ${config_path} ${tmp_config_path}",
-      require => File[$tmp_config_path],
       notify  => Exec['reload-jenkins'],
     }
   }
