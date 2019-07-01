@@ -26,8 +26,8 @@ class jenkins::cli {
   $extract_jar = "jar -xf ${jenkins::libdir}/jenkins.war WEB-INF/jenkins-cli.jar"
   $move_jar = "mv WEB-INF/jenkins-cli.jar ${jar}"
   $remove_dir = 'rm -rf WEB-INF'
-  $cli_tries = $jenkins::cli_tries
-  $cli_try_sleep = $jenkins::cli_try_sleep
+  $cli_tries = $::jenkins::cli_tries
+  $cli_try_sleep = $::jenkins::cli_try_sleep
 
   # make sure we always call Exec[jenlins-cli] in case
   # the binary does not exist
