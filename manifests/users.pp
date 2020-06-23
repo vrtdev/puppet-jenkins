@@ -7,6 +7,7 @@ class jenkins::users {
   }
 
   $_bootstrap_users = $::jenkins::bootstrapuser_hash
+  $_authentication_realm = $::jenkins::authentication_realm
 
   if $::jenkins::manage_bootstrapping {
     if empty($_bootstrap_users) {
